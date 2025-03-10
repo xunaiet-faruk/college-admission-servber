@@ -10,7 +10,7 @@ app.use(express.json())
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ot66xwb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -62,6 +62,18 @@ async function run() {
 
         app.get('/collegeadmision', async (req, res) => {
             const result = await CollegadmisionCollection.find().toArray();
+            res.send(result);
+        });
+
+
+        app.put('/collegeadmision/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedData = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: updatedData,
+            };
+            const result = await CollegadmisionCollection.updateOne(filter, updateDoc);
             res.send(result);
         });
 
